@@ -90,7 +90,8 @@ data = rna_assessment %>% select(analysis_type, analysis_var, analysis_var_value
 # overall 
 data_overall <- data %>% 
     filter(is.na(group_var) | group_var == "") %>%
-    select(-group_var, -group_var_value)
+    mutate(group_var_value = "Overall") %>%
+    select(-group_var)
 # district
 data_district <- data %>%
   filter(str_detect(group_var, "Qmeta8_District")) %>%
@@ -101,30 +102,50 @@ data_subdistrict <- data %>%
   select(-group_var)
 ```
 
-
-
-```{r generate-tables, echo=FALSE, results='asis'}
-# Example of how to generate tables
+```{r, echo=FALSE, results='asis'}
 
 # Generate a table for prop_select_multiple
-table1 <- generate_table_prop_select_multiple(
-  data = data_district,
-  analysis_var_input = "Qaap1_How_Do_People_Here_Prefer_To_Receive_Information",
-  group_var_value_input = "Al Bab"
-)
-print(table1)
+filtered_data <- data_district %>%
+    filter(
+      analysis_type == "prop_select_multiple",
+      analysis_var == "Qaap1_How_Do_People_Here_Prefer_To_Receive_Information",  # Filtra per analysis_var
+      group_var_value == "Al Bab"  # Filtra per valore di group_var_value
+    ) %>%
+    mutate(stat = round(stat*100, 1)) %>%  # Moltiplica per 100 e arrotonda a 1 decimale
+    select(analysis_var_value, label, stat, n)  # Mostra solo analysis_var_value e stat
 
+  # Crea la tabella
+  kable(
+    filtered_data,
+    caption = paste("Table for prop_select_multiple - Group Value:", "Al Bab"),
+    col.names = c("Option", "Label", "%", "N of Responses"),
+    format = "html"
+  ) %>%
+  kable_minimal(
+    html_font = "\"Raleway\", raleway, Segoe UI Light, sans-serif"  # Apply font styling
+  )
 ```
-```{r generate-tables2, echo=FALSE, results='asis'}
 
-# Generate a table for prop_select_one
-table2 <- generate_table_prop_select_one(
-  data = data_district,
-  analysis_var_input = "QdeA_Key_informant_type",
-  section_input = "Demographic",
-  label_input = "Key Informant Type"
-)
-print(table2)
+```{r, echo=FALSE, results='asis'}
+# Generate a table for prop_select_multiple
+filtered_data_2 <- data_district %>%
+    filter(
+      analysis_type == "prop_select_one",
+      group_var_value == "Afrin",
+      section == "Demographic",
+      label == "Key informant type"
+    ) %>%
+    mutate(stat = round(stat*100, 1)) %>%  # Moltiplica per 100 e arrotonda a 1 decimale
+    select(analysis_var_value, stat, n)  # Mostra solo analysis_var_value e stat
+  print(filtered_data_2)
+  # Crea la tabella
+  kable(
+    filtered_data_2,
+    caption = paste("Table for prop_select_one - District; Afrin - Section:", "Demographic" , "- Label:", "Key Informant Type"),
+    col.names = c("Analysis_var_value", "%", "N of Responses"),
+    format = "html"
+  ) %>%
+  kable_minimal(
+    html_font = "\"Raleway\", raleway, Segoe UI Light, sans-serif"  # Apply font styling
+  )
 ```
-
-
