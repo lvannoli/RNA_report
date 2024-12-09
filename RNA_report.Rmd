@@ -78,7 +78,7 @@ htmltools::img(src = knitr::image_uri("./inputs/logos/reach.jpg"),
 ```
 
 ```{r, include=FALSE, message=FALSE}
-rna_assessment <- read_excel("./inputs/data/analysis_outputs_rna.xlsx")
+rna_assessment <- read_excel("./inputs/data/analysis_outputs_rna_v4.xlsx")
 message("Variables and Data successfully loaded.")
 ```
 
@@ -104,48 +104,51 @@ data_subdistrict <- data %>%
 
 ```{r, echo=FALSE, results='asis'}
 
-# Generate a table for prop_select_multiple
-filtered_data <- data_district %>%
-    filter(
-      analysis_type == "prop_select_multiple",
-      analysis_var == "Qaap1_How_Do_People_Here_Prefer_To_Receive_Information",  # Filtra per analysis_var
-      group_var_value == "Al Bab"  # Filtra per valore di group_var_value
-    ) %>%
-    mutate(stat = round(stat*100, 1)) %>%  # Moltiplica per 100 e arrotonda a 1 decimale
-    select(analysis_var_value, label, stat, n)  # Mostra solo analysis_var_value e stat
-
-  # Crea la tabella
-  kable(
-    filtered_data,
-    caption = paste("Table for prop_select_multiple - Group Value:", "Al Bab"),
-    col.names = c("Option", "Label", "%", "N of Responses"),
-    format = "html"
-  ) %>%
-  kable_minimal(
-    html_font = "\"Raleway\", raleway, Segoe UI Light, sans-serif"  # Apply font styling
-  )
+table1 <- generate_table_prop_select_multiple(
+  data = data_district,
+  analysis_var_input = "Qaap1_How_Do_People_Here_Prefer_To_Receive_Information",
+  group_var_value_input = "A'zaz"
+)
+print(table1)
 ```
 
 ```{r, echo=FALSE, results='asis'}
 # Generate a table for prop_select_multiple
-filtered_data_2 <- data_district %>%
-    filter(
-      analysis_type == "prop_select_one",
-      group_var_value == "Afrin",
-      section == "Demographic",
-      label == "Key informant type"
-    ) %>%
-    mutate(stat = round(stat*100, 1)) %>%  # Moltiplica per 100 e arrotonda a 1 decimale
-    select(analysis_var_value, stat, n)  # Mostra solo analysis_var_value e stat
-  print(filtered_data_2)
-  # Crea la tabella
-  kable(
-    filtered_data_2,
-    caption = paste("Table for prop_select_one - District; Afrin - Section:", "Demographic" , "- Label:", "Key Informant Type"),
-    col.names = c("Analysis_var_value", "%", "N of Responses"),
-    format = "html"
-  ) %>%
-  kable_minimal(
-    html_font = "\"Raleway\", raleway, Segoe UI Light, sans-serif"  # Apply font styling
-  )
+table2 <- generate_table_prop_select_one(
+  data = data_district,
+  group_var_value_input = "Afrin",
+  section_input = "Demographic",
+  label_input = "Key informant type"
+)
+print(table2)
+# filtered_data <- data_district %>%
+#     filter(
+#       analysis_type == "prop_select_one",
+#       group_var_value == "Afrin",
+#       section == "Demographic",
+#       label == "Key informant type"
+#     ) %>%
+#     mutate(stat = round(stat*100, 1)) %>%  # Moltiplica per 100 e arrotonda a 1 decimale
+#     select(analysis_var_value, stat, n)  # Mostra solo analysis_var_value e stat
+#   # Crea la tabella
+#   kable(
+#     filtered_data,
+#     caption = paste("Table for prop_select_one - District; Afrin - Section:", "Demographic" , "- Label:", "Key Informant Type"),
+#     col.names = c("Analysis_var_value", "%", "N of Responses"),
+#     format = "html"
+#   ) %>%
+#   kable_minimal(
+#     html_font = "\"Raleway\", raleway, Segoe UI Light, sans-serif"  # Apply font styling
+#   )
+```
+
+```{r, echo=FALSE, results='asis'}
+# Generate a table for mean analysis
+table3 <- generate_table_mean(
+  data = data_district,
+  group_var_value_input = "Afrin",
+  section_input = "Demographic",
+  label_input = "The total number of individuals as of today in the affected location (including any arrivals since the recent crisis)"
+)
+print(table3)
 ```
