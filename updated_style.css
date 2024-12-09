@@ -1,0 +1,44 @@
+
+/* Title style */
+title {
+  font-family: 'Raleway', 'Segoe UI', sans-serif;
+  font-size: 16pt;
+  font-weight: bold;
+  color: #006764;
+}
+
+/* Header 1 style */
+h1 {
+  font-family: 'Raleway', 'Segoe UI', sans-serif;
+  font-size: 12.5pt;
+  font-weight: bold;
+  color: #445464;
+}
+
+/* Header 2 style */
+h2 {
+  font-family: 'Raleway', 'Segoe UI', sans-serif;
+  font-size: 11pt;
+  font-style: italic;
+  color: #445464;
+}
+
+/* Header 3 style */
+h3 {
+  font-family: 'Raleway', 'Segoe UI', sans-serif;
+  font-size: 10.5pt;
+  font-weight: bold;
+  color: #445464;
+}
+
+/* Main body text style */
+body {
+  font-family: 'Raleway', 'Segoe UI Light', sans-serif;
+  font-size: 11 pt;
+  line-height: 1.5;
+  color: #595959;
+}
+
+.selectize-control.single {
+  width: 75px; /* Adjust the width as needed */
+}

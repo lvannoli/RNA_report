@@ -1,0 +1,130 @@
+---
+title: "RNA report"
+subtitle: "Rapid Needs Assessment Syria"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    output_file: "RNA_Output_Dec_2024.html"
+    toc: true
+    toc_depth: 2
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    df_print: paged
+    fig_caption: yes
+    css: "updated_style.css"
+editor_options:
+  markdown:
+    wrap: sentence
+---
+
+<!-- set the buttons -->
+<div style="text-align: center; margin-top: 20px;">
+  <a href="#All" class="button">All</a>
+  <a href="#subdistrict" class="button">Sub-District Aggregation</a>
+  <a href="#district" class="button">District Aggregation</a>
+</div>
+
+# All {#All}
+
+## Demographic
+
+## Education
+
+## FLS
+
+## WASH
+
+# Sub-District Aggregation {#subdistrict}
+
+## Demographic
+
+## Education
+
+## FLS
+
+## WASH
+
+
+# District Aggregation {#district}
+
+## Demographic
+
+## Education
+
+## FLS
+
+## WASH
+
+
+```{r setup, include=FALSE}
+library(readxl)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+
+source("./scripts/functions.R")
+``` 
+
+
+```{r, echo=F, results='hide', message=FALSE}
+htmltools::img(src = knitr::image_uri("./inputs/logos/reach.jpg"),
+               alt = 'logo',
+               style = 'position:absolute;
+                        top:0; 
+                        right:0; padding:10px; width: 350px; height: auto;')
+```
+
+```{r, include=FALSE, message=FALSE}
+rna_assessment <- read_excel("./inputs/data/analysis_outputs_rna.xlsx")
+message("Variables and Data successfully loaded.")
+```
+
+```{r, echo=FALSE}
+# read the data from the excel file
+data = rna_assessment %>% select(analysis_type, analysis_var, analysis_var_value, group_var, group_var_value, stat, n, section, label)
+
+# aggregate the data by group_var
+# overall 
+data_overall <- data %>% 
+    filter(is.na(group_var) | group_var == "") %>%
+    select(-group_var, -group_var_value)
+# district
+data_district <- data %>%
+  filter(str_detect(group_var, "Qmeta8_District")) %>%
+  select(-group_var)
+# subdistrict
+data_subdistrict <- data %>%
+  filter(str_detect(group_var, "Qmeta9_SubDistrict")) %>%
+  select(-group_var)
+```
+
+
+
+```{r generate-tables, echo=FALSE, results='asis'}
+# Example of how to generate tables
+
+# Generate a table for prop_select_multiple
+table1 <- generate_table_prop_select_multiple(
+  data = data_district,
+  analysis_var_input = "Qaap1_How_Do_People_Here_Prefer_To_Receive_Information",
+  group_var_value_input = "Al Bab"
+)
+print(table1)
+
+```
+```{r generate-tables2, echo=FALSE, results='asis'}
+
+# Generate a table for prop_select_one
+table2 <- generate_table_prop_select_one(
+  data = data_district,
+  analysis_var_input = "QdeA_Key_informant_type",
+  section_input = "Demographic",
+  label_input = "Key Informant Type"
+)
+print(table2)
+```
+
+
