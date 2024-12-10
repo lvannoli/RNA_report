@@ -1,0 +1,4 @@
+/inputs/data/*
+!/inputs/data/analysis_outputs_rna_v4.xlsx
+/scripts/old_codes.R 
+RNA_report.knit.md
