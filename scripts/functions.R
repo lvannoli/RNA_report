@@ -147,6 +147,45 @@ plot_multi_choice <- function(data, label_input) {
   # Compute statistics
   total_responses <- filtered_data$n_total
 
+  # # Determine if a legend is needed
+  # use_legend <- nrow(filtered_data) > 6 || any(nchar(filtered_data$analysis_var_value) > 40)
+
+  # ggplot(filtered_data, aes(x = factor(1), y = round(stat*100, 1), fill = str_wrap(analysis_var_value, width = 10))) +
+  #   geom_bar(stat = "identity",  fill = "#75C376", position = "dodge", width = 0.7) +
+  #   geom_text(
+  #     aes(label = round(stat * 100, 1)), # Add the percentage values on top of the bars
+  #     vjust = -0.5, # Position slightly above the bars
+  #     size = 4, # Font size
+  #     color = "black"
+  #   ) +
+  #   labs(
+  #     title = str_wrap(paste("Multi-Choice: ", label_input), width=40),
+  #     x = "Options",
+  #     y = "Percentage [%]",
+  #     fill = "Options" # legend titles
+  #   ) +
+  #   theme_minimal() +
+  #   theme(
+  #     axis.text.x = if (use_legend) element_blank() else element_text(angle = 45, hjust = 1),
+  #     axis.ticks.x = if (use_legend) element_blank() else element_line(),
+  #     plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+  #     legend.position = if (use_legend) "right" else "none"
+  #   ) +
+  #   scale_y_continuous(
+  #     limits = c(0, max(filtered_data$stat, na.rm = TRUE) + 10), # Extend y-axis
+  #     expand = expansion(mult = c(0, 0.1))
+  #   ) +
+  #   # add the stat box
+  #   annotate(
+  #     "text", 
+  #     x = 1,  # Position near the first bar
+  #     y = max(filtered_data$stat * 100) + 10,  # Position above the highest bar
+  #     label = paste0("Total Responses: ", round(total_responses, 1)),
+  #     hjust = 0, # right alignment
+  #     vjust = 0, # Top alignment
+  #     size = 3,
+  #     color = "black"
+  #   )
   ggplot(filtered_data, aes(x = str_wrap(analysis_var_value, width = 10), y = round(stat * 100, 1))) +
     geom_bar(stat = "identity", fill = "#75C376") +
     geom_text(
@@ -232,7 +271,7 @@ plot_mean_analysis <- function(data, label_input) {
   # Adjust y-axis limits dynamically
   y_max <- max(filtered_data$stat, na.rm = TRUE)
   y_limit <- y_max + y_max * 0.2  # Add 20% extra space above the bars
-  
+
   ggplot(filtered_data, aes(x = str_wrap(analysis_var_value, width = 10), y =stat)) +
     geom_bar(stat = "identity", fill = "#0C596B", width = 0.7) +
     geom_text(

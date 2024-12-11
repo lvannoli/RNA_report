@@ -6,7 +6,7 @@ output:
   html_document:
     output_file: "RNA_Output_Dec_2024.html"
     toc: true
-    toc_depth: 4
+    toc_depth: 3
     toc_float:
       collapsed: true
       smooth_scroll: false
@@ -18,22 +18,8 @@ editor_options:
     wrap: sentence
 ---
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-  <div>
-    <h1 style="margin: 0;">RNA Report</h1>
-    <h2 style="margin: 0; font-weight: normal;">Rapid Needs Assessment Syria</h2>
-    <p style="margin: 0; font-size: 14px; color: grey;">`r format(Sys.time(), '%d %B, %Y')`</p>
-  </div>
-  <img src="./inputs/logos/REACH_Logo_TransparentBackground_WH.png" alt="REACH Logo" style="width: 250px; height: auto; margin-left: 20px;">
-</div>
-
-```{r, echo=F, results='hide', message=FALSE}
-# htmltools::img(src = knitr::image_uri("./inputs/logos/reach.jpg"),
-#                alt = 'logo',
-#                style = 'position:absolute;
-#                         top:0; 
-#                         right:0; padding:10px; width: 350px; height: auto;')
-```
+<img src="./inputs/logos/REACH_Logo.jpg" alt="REACH_Logo" style="width: 45%; display: inline-block;">
+<img src="./inputs/logos/ocha_extended.jpg" alt="ocha" style="width: 40%; display: inline-block;">
 
 ```{r setup, include=FALSE}
 library(readxl)
@@ -71,51 +57,8 @@ data_subdistrict <- data %>%
   select(-group_var)
 ```
 
-<!-- Buttons for controlling visibility -->
-<div style="text-align: center; margin-top: 20px;">
-  <button class="button" onclick="showOverall()">Overall</button>
-  <button class="button" onclick="showSubdistrict()">Sub-District</button>
-  <button class="button" onclick="showDistrict()">District</button>
-</div>
-
-
-<script>
-function showOverall() {
-  // Hide everything first
-  document.querySelectorAll('.district, .subdistrict').forEach(function(chunk) {
-    chunk.style.display = 'none';
-  });
-  // Show the "overall" group
-  document.querySelectorAll('.overall').forEach(function(chunk) {
-    chunk.style.display = 'block';
-  });
-}
-
-function showSubdistrict() {
-  // Hide everything first
-  document.querySelectorAll('.overall, .district').forEach(function(chunk) {
-    chunk.style.display = 'none';
-  });
-  // Show the "subdistrict" group
-  document.querySelectorAll('.subdistrict').forEach(function(chunk) {
-    chunk.style.display = 'block';
-  });
-}
-
-function showDistrict() {
-  // Hide everything first
-  document.querySelectorAll('.overall, .subdistrict').forEach(function(chunk) {
-    chunk.style.display = 'none';
-  });
-  // Show the "district" group
-  document.querySelectorAll('.district').forEach(function(chunk) {
-    chunk.style.display = 'block';
-  });
-}
-</script>
-
 ```{r, echo=FALSE, results='asis'}
-cat('<div class="overall">')
+# cat('<div class="overall">')
 # Helper function to generate and print tables
 generate_and_print_table <- function(table_function, data, ...) {
   tryCatch({
@@ -134,60 +77,60 @@ unique_group_var_values <- unique(data_overall$group_var_value)
 cat("# Overall\n\n")
 for (group_var_value in unique_group_var_values) {
   # Print the group_var_value (## Header)
-  cat(paste0("## ", group_var_value, "\n\n"))
+  # cat(paste0("## ", group_var_value, "\n\n"))
   
   # Filter data for the current group_var_value
   group_data <- data_overall %>% filter(group_var_value == group_var_value)
   
   # Iterate over each sector (### Header)
-  for (section in unique(group_data$section)) {
-    cat(paste0("### ", section, "\n\n"))
+  for (sec in unique(group_data$section)) {
+    cat(paste0("## ", sec, "\n\n"))
     
     # Filter data for the current sector
-    section_data <- group_data %>% filter(section == section)
+    section_data <- group_data %>% filter(section == sec)
     
     # Multi-Choice Questions (#### Header)
-    cat("#### Multi-Choice Questions\n\n")
-    for (analysis_var in unique(section_data$analysis_var)) {
+    # cat("#### Multi-Choice Questions\n\n")
+    for (ana_var in unique(section_data$analysis_var)) {
       generate_and_print_table(
         table_function = generate_table_prop_select_multiple,
         data = section_data,
-        analysis_var_input = analysis_var,
-        section_input = section,
+        analysis_var_input = ana_var,
+        section_input = sec,
         group_var_value_input = group_var_value
       )
     }
     
     # Single-Choice Questions (#### Header)
-    cat("#### Single-Choice Questions\n\n")
-    for (label in unique(section_data$label)) {
+    # cat("#### Single-Choice Questions\n\n")
+    for (lab in unique(section_data$label)) {
       generate_and_print_table(
         table_function = generate_table_prop_select_one,
         data = section_data,
         group_var_value_input = group_var_value,
-        label_input = label,
-        section_input = section
+        label_input = lab,
+        section_input = sec
       )
     }
     
     # Mean Analysis (#### Header)
-    cat("#### Mean Analysis\n\n")
-    for (label in unique(section_data$label)) {
+    # cat("#### Mean Analysis\n\n")
+    for (lab in unique(section_data$label)) {
       generate_and_print_table(
         table_function = generate_table_mean,
         data = section_data,
         group_var_value_input = group_var_value,
-        label_input = label,
-        section_input = section
+        label_input = lab,
+        section_input = sec
       )
     }
   }
 }
-cat('</div>')
+# cat('</div>')
 ```
 
 ```{r, echo=FALSE, results='asis'}
-cat('<div class="subdistrict">')
+# cat('<div class="subdistrict">')
 # Helper function to generate and print tables
 generate_and_print_table <- function(table_function, data, ...) {
   tryCatch({
@@ -212,54 +155,54 @@ for (group_var_value in unique_group_var_values) {
   group_data <- data_subdistrict %>% filter(group_var_value == group_var_value)
   
   # Iterate over each sector (### Header)
-  for (section in unique(group_data$section)) {
-    cat(paste0("### ", section, "\n\n"))
+  for (sec in unique(group_data$section)) {
+    cat(paste0("### ", sec, "\n\n"))
     
     # Filter data for the current sector
-    section_data <- group_data %>% filter(section == section)
+    section_data <- group_data %>% filter(section == sec)
     
     # Multi-Choice Questions (#### Header)
-    cat("#### Multi-Choice Questions\n\n")
-    for (analysis_var in unique(section_data$analysis_var)) {
+    # cat("#### Multi-Choice Questions\n\n")
+    for (ana_var in unique(section_data$analysis_var)) {
       generate_and_print_table(
         table_function = generate_table_prop_select_multiple,
         data = section_data,
-        analysis_var_input = analysis_var,
-        section_input = section,
+        analysis_var_input = ana_var,
+        section_input = sec,
         group_var_value_input = group_var_value
       )
     }
     
     # Single-Choice Questions (#### Header)
-    cat("#### Single-Choice Questions\n\n")
-    for (label in unique(section_data$label)) {
+    # cat("#### Single-Choice Questions\n\n")
+    for (lab in unique(section_data$label)) {
       generate_and_print_table(
         table_function = generate_table_prop_select_one,
         data = section_data,
         group_var_value_input = group_var_value,
-        label_input = label,
-        section_input = section
+        label_input = lab,
+        section_input = sec
       )
     }
     
     # Mean Analysis (#### Header)
-    cat("#### Mean Analysis\n\n")
-    for (label in unique(section_data$label)) {
+    # cat("#### Mean Analysis\n\n")
+    for (lab in unique(section_data$label)) {
       generate_and_print_table(
         table_function = generate_table_mean,
         data = section_data,
         group_var_value_input = group_var_value,
-        label_input = label,
-        section_input = section
+        label_input = lab,
+        section_input = sec
       )
     }
   }
 }
-cat('</div>')
+# cat('</div>')
 ```
 
 ```{r, echo=FALSE, results='asis'}
-cat('<div class="district">')
+# cat('<div class="district">')
 # Helper function to generate and print tables
 generate_and_print_table <- function(table_function, data, ...) {
   tryCatch({
@@ -284,48 +227,48 @@ for (group_var_value in unique_group_var_values) {
   group_data <- data_district %>% filter(group_var_value == group_var_value)
   
   # Iterate over each sector (### Header)
-  for (section in unique(group_data$section)) {
-    cat(paste0("### ", section, "\n\n"))
+  for (sec in unique(group_data$section)) {
+    cat(paste0("### ", sec, "\n\n"))
     
     # Filter data for the current sector
-    section_data <- group_data %>% filter(section == section)
+    section_data <- group_data %>% filter(section == sec)
     
     # Multi-Choice Questions (#### Header)
-    cat("#### Multi-Choice Questions\n\n")
-    for (analysis_var in unique(section_data$analysis_var)) {
+    # cat("#### Multi-Choice Questions\n\n")
+    for (ana_var in unique(section_data$analysis_var)) {
       generate_and_print_table(
         table_function = generate_table_prop_select_multiple,
         data = section_data,
-        analysis_var_input = analysis_var,
-        section_input = section,
+        analysis_var_input = ana_var,
+        section_input = sec,
         group_var_value_input = group_var_value
       )
     }
     
     # Single-Choice Questions (#### Header)
-    cat("#### Single-Choice Questions\n\n")
-    for (label in unique(section_data$label)) {
+    # cat("#### Single-Choice Questions\n\n")
+    for (lab in unique(section_data$label)) {
       generate_and_print_table(
         table_function = generate_table_prop_select_one,
         data = section_data,
         group_var_value_input = group_var_value,
-        label_input = label,
-        section_input = section
+        label_input = lab,
+        section_input = sec
       )
     }
     
     # Mean Analysis (#### Header)
-    cat("#### Mean Analysis\n\n")
-    for (label in unique(section_data$label)) {
+    # cat("#### Mean Analysis\n\n")
+    for (lab in unique(section_data$label)) {
       generate_and_print_table(
         table_function = generate_table_mean,
         data = section_data,
         group_var_value_input = group_var_value,
-        label_input = label,
-        section_input = section
+        label_input = lab,
+        section_input = sec
       )
     }
   }
 }
-cat('</div>')
+# cat('</div>')
 ```
