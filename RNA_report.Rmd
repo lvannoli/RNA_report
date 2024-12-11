@@ -18,12 +18,21 @@ editor_options:
     wrap: sentence
 ---
 
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <div>
+    <h1 style="margin: 0;">RNA Report</h1>
+    <h2 style="margin: 0; font-weight: normal;">Rapid Needs Assessment Syria</h2>
+    <p style="margin: 0; font-size: 14px; color: grey;">`r format(Sys.time(), '%d %B, %Y')`</p>
+  </div>
+  <img src="./inputs/logos/reach.jpg" alt="REACH Logo" style="width: 250px; height: auto; margin-left: 20px;">
+</div>
+
 ```{r, echo=F, results='hide', message=FALSE}
-htmltools::img(src = knitr::image_uri("./inputs/logos/reach.jpg"),
-               alt = 'logo',
-               style = 'position:absolute;
-                        top:0; 
-                        right:0; padding:10px; width: 350px; height: auto;')
+# htmltools::img(src = knitr::image_uri("./inputs/logos/reach.jpg"),
+#                alt = 'logo',
+#                style = 'position:absolute;
+#                         top:0; 
+#                         right:0; padding:10px; width: 350px; height: auto;')
 ```
 
 ```{r setup, include=FALSE}
@@ -122,22 +131,23 @@ generate_and_print_table <- function(table_function, data, ...) {
 unique_group_var_values <- unique(data_overall$group_var_value)
 
 # Iterate over each district
+cat("# Overall\n\n")
 for (group_var_value in unique_group_var_values) {
   # Print the group_var_value (## Header)
-  # cat(paste0("## ", group_var_value, "\n\n"))
+  cat(paste0("## ", group_var_value, "\n\n"))
   
   # Filter data for the current group_var_value
   group_data <- data_overall %>% filter(group_var_value == group_var_value)
   
   # Iterate over each sector (### Header)
   for (section in unique(group_data$section)) {
-    cat(paste0("## ", section, "\n\n"))
+    cat(paste0("### ", section, "\n\n"))
     
     # Filter data for the current sector
     section_data <- group_data %>% filter(section == section)
     
     # Multi-Choice Questions (#### Header)
-    cat("### Multi-Choice Questions\n\n")
+    cat("#### Multi-Choice Questions\n\n")
     for (analysis_var in unique(section_data$analysis_var)) {
       generate_and_print_table(
         table_function = generate_table_prop_select_multiple,
@@ -149,7 +159,7 @@ for (group_var_value in unique_group_var_values) {
     }
     
     # Single-Choice Questions (#### Header)
-    cat("### Single-Choice Questions\n\n")
+    cat("#### Single-Choice Questions\n\n")
     for (label in unique(section_data$label)) {
       generate_and_print_table(
         table_function = generate_table_prop_select_one,
@@ -161,7 +171,7 @@ for (group_var_value in unique_group_var_values) {
     }
     
     # Mean Analysis (#### Header)
-    cat("### Mean Analysis\n\n")
+    cat("#### Mean Analysis\n\n")
     for (label in unique(section_data$label)) {
       generate_and_print_table(
         table_function = generate_table_mean,
@@ -193,6 +203,7 @@ generate_and_print_table <- function(table_function, data, ...) {
 unique_group_var_values <- unique(data_subdistrict$group_var_value)
 
 # Iterate over each district
+cat("# SubDistrict\n\n")
 for (group_var_value in unique_group_var_values) {
   # Print the group_var_value (## Header)
   cat(paste0("## ", group_var_value, "\n\n"))
@@ -264,6 +275,7 @@ generate_and_print_table <- function(table_function, data, ...) {
 unique_group_var_values <- unique(data_district$group_var_value)
 
 # Iterate over each district
+cat("# District\n\n")
 for (group_var_value in unique_group_var_values) {
   # Print the group_var_value (## Header)
   cat(paste0("## ", group_var_value, "\n\n"))
