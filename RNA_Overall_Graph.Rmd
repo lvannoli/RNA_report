@@ -47,49 +47,49 @@ data_overall <- data %>%
     filter(is.na(group_var) | group_var == "") %>%
     mutate(group_var_value = "Overall") %>%
     select(-group_var)
-#  i want to print the column analysis_type in data_overall.column(section=="Demographic")
-    print(data_overall)
 ```
 
 ```{r plots, echo=FALSE, results='asis'}
 cat('<div class="overall">')
 # Iterate over each group_var_value and section
 cat("# Overall\n\n")
-for (section in unique(data_overall$section)) {
-    cat(paste0("## ", section, "\n\n"))
-    section_data <- data_overall %>% filter(section == section)
+for (sec in unique(data_overall$section)) {
+    cat(paste0("## ", sec, "\n\n"))
+    section_data <- data_overall %>% filter(section == sec)
     
     multi_choice_question_data <- section_data %>% filter(analysis_type == "prop_select_multiple")
 
-    cat("Number of rows in multi_choice_question_data: ", nrow(multi_choice_question_data), "\n\n")    # Multi-Choice Questions
-    for (label in unique(multi_choice_question_data$label)) {
+    # cat("Number of rows in multi_choice_question_data: ", nrow(multi_choice_question_data), "\n\n")    # Multi-Choice Questions
+    for (lab in unique(multi_choice_question_data$label)) {
         generate_and_print_plot(
             data = section_data,
             plot_function = plot_multi_choice,
-            label_input = label
+            label_input = lab
+        )
+    }
+    cat("<hr>\n\n")
+    
+    single_choice_question_data <- section_data %>% filter(analysis_type == "prop_select_one")
+    # Single-Choice Questions
+    for (lab in unique(single_choice_question_data$label)) {
+        generate_and_print_plot(
+            data = section_data,
+            plot_function = plot_single_choice,
+            label_input = lab
         )
     }
     
-    # single_choice_question_data <- section_data %>% filter(analysis_type == "prop_select_one")
-    # # Single-Choice Questions
-    # for (label in unique(single_choice_question_data$label)) {
-    #     generate_and_print_plot(
-    #         data = section_data,
-    #         plot_function = plot_single_choice,
-    #         label_input = label
-    #     )
-    # }
-    
-    # # Mean Analysis
-    # mean_analysis_data <- section_data %>% filter(analysis_type == "mean")
-    # for (label in unique(mean_analysis_data$label)) {
-    #     generate_and_print_plot(
-    #         data = section_data,
-    #         plot_function = plot_mean_analysis,
-    #         label_input = label
-    #     )
-    # }
+    cat("<hr>\n\n")
+    # Mean Analysis
+    mean_analysis_data <- section_data %>% filter(analysis_type == "mean")
+    for (lab in unique(mean_analysis_data$label)) {
+        generate_and_print_plot(
+            data = section_data,
+            plot_function = plot_mean_analysis,
+            label_input = lab
+        )
+    }
+    cat("<hr>\n\n")
 }
 
-cat('</div>')
 ```
