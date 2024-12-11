@@ -127,3 +127,139 @@ generate_table_mean <- function(data, group_var_value_input, section_input, labe
   column_spec(3, width = "20em")      # Adjust the width of the third column
   )
 }
+
+
+# Helper function to generate and print plots
+generate_and_print_plot <- function(data, plot_function, ...) {
+  tryCatch({
+    plot <- do.call(plot_function, c(list(data = data), list(...)))
+    if (!is.null(plot)) print(plot)
+  }, error = function(e) {
+    message(sprintf("Error generating plot: %s", e$message))
+    return(NULL)
+  })
+}
+
+# Plotting Functions
+plot_multi_choice <- function(data, label_input) {
+  filtered_data <- data %>% filter(label == label_input)
+
+  # Compute statistics
+  total_responses <- filtered_data$n_total
+
+  ggplot(filtered_data, aes(x = str_wrap(analysis_var_value, width = 10), y = round(stat * 100, 1))) +
+    geom_bar(stat = "identity", fill = "steelblue") +
+    geom_text(
+      aes(label = round(stat * 100, 1)), # Add the percentage values on top of the bars
+      vjust = -0.5, # Position slightly above the bars
+      size = 4, # Font size
+      color = "black"
+    ) +
+    labs(
+      title = str_wrap(paste("Multi-Choice: ", label_input), width=40),
+      x = "Options",
+      y = "Percentage [%]"
+    ) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, margin = margin(t = 10)), # Adjust x-axis labels
+      plot.title = element_text(size = 12, face = "bold", hjust = 0.5) # Adjust title
+    ) +
+    scale_y_continuous(
+      limits = c(0, max(filtered_data$stat * 100, na.rm = TRUE) + 20), # Extend y-axis
+      expand = expansion(mult = c(0, 0.1)) # Add space above
+    ) +
+    # add the stat box
+    annotate(
+      "text", 
+      x = 1,  # Position near the first bar
+      y = max(filtered_data$stat * 100) + 10,  # Position above the highest bar
+      label = paste0("Total Responses: ", round(total_responses, 1)),
+      hjust = 0, # right alignment
+      vjust = 0, # Top alignment
+      size = 3,
+      color = "black"
+    )
+}
+
+plot_single_choice <- function(data, label_input) {
+  filtered_data <- data %>% filter(label == label_input)
+
+  # Compute statistics
+  total_responses <- filtered_data$n_total
+  
+  ggplot(filtered_data, aes(x = str_wrap(analysis_var_value, width = 10), y = round(stat * 100, 1))) +
+    geom_bar(stat = "identity", fill = "darkorange") +
+    geom_text(
+      aes(label = round(stat * 100, 1)), # Add the percentage values on top of the bars
+      vjust = -0.5, # Position slightly above the bars
+      size = 4, # Font size
+      color = "black"
+    ) +
+    labs(
+      title = str_wrap(paste("Single-Choice: ", label_input), width=40),
+      x = "Options",
+      y = "Percentage [%]"
+    ) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, margin = margin(t = 10)), # Adjust x-axis labels
+      plot.title = element_text(size = 12, face = "bold", hjust = 0.5) # Adjust title
+    ) +
+    scale_y_continuous(
+      limits = c(0, max(filtered_data$stat * 100, na.rm = TRUE) + 20), # Extend y-axis
+      expand = expansion(mult = c(0, 0.1)) # Add space above
+    ) +
+    # add the stat box
+    annotate(
+    "text", 
+    x = 1,  # Position near the first bar
+    y = max(filtered_data$stat * 100) + 10,  # Position above the highest bar
+    label = paste0("Total Responses: ", round(total_responses, 1)),
+    hjust = 0, # Left alignment
+    vjust = 0, # Top alignment
+    size = 4,
+    color = "black"
+  )
+}
+
+plot_mean_analysis <- function(data, label_input) {
+  filtered_data <- data %>% filter(label == label_input)
+
+  # Compute statistics
+  total_responses <- filtered_data$n_total
+  
+  ggplot(filtered_data, aes(x = str_wrap(analysis_var_value, width = 10), y =stat)) +
+    geom_bar(stat = "identity", fill = "darkgreen") +
+    geom_text(
+      aes(label = round(stat, 2)), # Add the percentage values on top of the bars
+      vjust = -0.5, # Position slightly above the bars
+      size = 4, # Font size
+      color = "black"
+    ) +
+    labs(
+      title = str_wrap(paste("Mean Analysis: ", label_input), width=40),
+      x = "Options",
+      y = "Mean Value"
+    ) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, margin = margin(t = 10)), # Adjust x-axis labels
+      plot.title = element_text(size = 12, face = "bold", hjust = 0.5) # Adjust title
+    ) +
+    scale_y_continuous(
+      limits = c(0, max(filtered_data$stat, na.rm = TRUE)), # Extend y-axis
+      expand = expansion(mult = c(0, 0.1)) # Add space above
+    ) +
+    # add the stat box
+    annotate(
+    "text", 
+    x = 1,  # Position near the first bar
+    y = max(filtered_data$stat),  # Position above the highest bar
+    label = paste0("Total Responses: ", round(total_responses, 1)),
+    hjust = 0, # Left alignment
+    vjust = 0, # Top alignment
+    size = 4,
+    color = "black"
+  )
+}

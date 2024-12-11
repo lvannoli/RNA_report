@@ -1,0 +1,93 @@
+---
+title: "RNA report"
+subtitle: "Rapid Needs Assessment Syria - Overall Analysis"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    df_print: paged
+    fig_caption: yes
+    css: "updated_style.css"
+editor_options:
+  markdown:
+    wrap: sentence
+---
+
+<div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+  <img src="./inputs/logos/REACH_Logo_TransparentBackground_WH.png" alt="REACH Logo" style="width: 250px; height: auto;">
+</div>
+
+```{r setup, include=FALSE}
+library(readxl)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+
+source("./scripts/functions.R")
+``` 
+
+```{r load_data, include=FALSE, message=FALSE}
+rna_assessment <- read_excel("./inputs/data/analysis_outputs_rna_v4.xlsx")
+message("Variables and Data successfully loaded.")
+```
+
+```{r dividing_data, echo=FALSE}
+# read the data from the excel file
+data = rna_assessment %>% select(analysis_type, analysis_var, analysis_var_value, group_var, group_var_value, stat, n, section, label, n_total)
+
+# aggregate the data by group_var
+# overall 
+data_overall <- data %>% 
+    filter(is.na(group_var) | group_var == "") %>%
+    mutate(group_var_value = "Overall") %>%
+    select(-group_var)
+```
+
+```{r plots, echo=FALSE, results='asis'}
+cat('<div class="overall">')
+# Iterate over each group_var_value and section
+cat("# Overall\n\n")
+for (section in unique(data_overall$section)) {
+    cat(paste0("## ", section, "\n\n"))
+    section_data <- data_overall %>% filter(section == section)
+    
+    multi_choice_question_data <- section_data %>% filter(analysis_type == "prop_select_multiple")
+
+    cat("Number of rows in multi_choice_question_data: ", nrow(multi_choice_question_data), "\n\n")    # Multi-Choice Questions
+    for (label in unique(multi_choice_question_data$label)) {
+        generate_and_print_plot(
+            data = section_data,
+            plot_function = plot_multi_choice,
+            label_input = label
+        )
+    }
+    
+    # single_choice_question_data <- section_data %>% filter(analysis_type == "prop_select_one")
+    # # Single-Choice Questions
+    # for (label in unique(single_choice_question_data$label)) {
+    #     generate_and_print_plot(
+    #         data = section_data,
+    #         plot_function = plot_single_choice,
+    #         label_input = label
+    #     )
+    # }
+    
+    # # Mean Analysis
+    # mean_analysis_data <- section_data %>% filter(analysis_type == "mean")
+    # for (label in unique(mean_analysis_data$label)) {
+    #     generate_and_print_plot(
+    #         data = section_data,
+    #         plot_function = plot_mean_analysis,
+    #         label_input = label
+    #     )
+    # }
+}
+
+cat('</div>')
+```
