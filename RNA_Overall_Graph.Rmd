@@ -17,9 +17,8 @@ editor_options:
     wrap: sentence
 ---
 
-<div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
-  <img src="./inputs/logos/REACH_Logo_TransparentBackground_WH.png" alt="REACH Logo" style="width: 250px; height: auto;">
-</div>
+<img src="./inputs/logos/REACH_Logo.jpg" alt="REACH_Logo" style="width: 45%; display: inline-block;">
+<img src="./inputs/logos/ocha_extended.jpg" alt="ocha" style="width: 40%; display: inline-block;">
 
 ```{r setup, include=FALSE}
 library(readxl)
@@ -52,9 +51,9 @@ data_overall <- data %>%
 ```{r plots, echo=FALSE, results='asis'}
 cat('<div class="overall">')
 # Iterate over each group_var_value and section
-cat("# Overall\n\n")
+# cat("# Overall Analysis\n\n")
 for (sec in unique(data_overall$section)) {
-    cat(paste0("## ", sec, "\n\n"))
+    cat(paste0("# ", sec, "\n\n"))
     section_data <- data_overall %>% filter(section == sec)
     
     multi_choice_question_data <- section_data %>% filter(analysis_type == "prop_select_multiple")

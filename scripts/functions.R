@@ -148,7 +148,7 @@ plot_multi_choice <- function(data, label_input) {
   total_responses <- filtered_data$n_total
 
   ggplot(filtered_data, aes(x = str_wrap(analysis_var_value, width = 10), y = round(stat * 100, 1))) +
-    geom_bar(stat = "identity", fill = "steelblue") +
+    geom_bar(stat = "identity", fill = "#75C376") +
     geom_text(
       aes(label = round(stat * 100, 1)), # Add the percentage values on top of the bars
       vjust = -0.5, # Position slightly above the bars
@@ -189,7 +189,7 @@ plot_single_choice <- function(data, label_input) {
   total_responses <- filtered_data$n_total
   
   ggplot(filtered_data, aes(x = str_wrap(analysis_var_value, width = 10), y = round(stat * 100, 1))) +
-    geom_bar(stat = "identity", fill = "darkorange") +
+    geom_bar(stat = "identity", fill = "#EE5859") +
     geom_text(
       aes(label = round(stat * 100, 1)), # Add the percentage values on top of the bars
       vjust = -0.5, # Position slightly above the bars
@@ -228,9 +228,13 @@ plot_mean_analysis <- function(data, label_input) {
 
   # Compute statistics
   total_responses <- filtered_data$n_total
+
+  # Adjust y-axis limits dynamically
+  y_max <- max(filtered_data$stat, na.rm = TRUE)
+  y_limit <- y_max + y_max * 0.2  # Add 20% extra space above the bars
   
   ggplot(filtered_data, aes(x = str_wrap(analysis_var_value, width = 10), y =stat)) +
-    geom_bar(stat = "identity", fill = "darkgreen") +
+    geom_bar(stat = "identity", fill = "#0C596B", width = 0.7) +
     geom_text(
       aes(label = round(stat, 2)), # Add the percentage values on top of the bars
       vjust = -0.5, # Position slightly above the bars
@@ -245,17 +249,19 @@ plot_mean_analysis <- function(data, label_input) {
     theme_minimal() +
     theme(
       axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, margin = margin(t = 10)), # Adjust x-axis labels
-      plot.title = element_text(size = 12, face = "bold", hjust = 0.5) # Adjust title
+      plot.title = element_text(size = 12, face = "bold", hjust = 0.5), # Adjust title
+      axis.title.y = element_text(margin = margin(r = 10)),                                 # Adjust y-axis title margin
+      axis.title.x = element_text(margin = margin(t = 10))                             # Adjust x-axis title margin
     ) +
     scale_y_continuous(
-      limits = c(0, max(filtered_data$stat, na.rm = TRUE)), # Extend y-axis
+      limits = c(0, y_limit), # Extend y-axis
       expand = expansion(mult = c(0, 0.1)) # Add space above
     ) +
     # add the stat box
     annotate(
     "text", 
     x = 1,  # Position near the first bar
-    y = max(filtered_data$stat),  # Position above the highest bar
+    y = y_limit,     # Position above the highest bar
     label = paste0("Total Responses: ", round(total_responses, 1)),
     hjust = 0, # Left alignment
     vjust = 0, # Top alignment
