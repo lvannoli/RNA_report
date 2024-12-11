@@ -47,6 +47,8 @@ data_overall <- data %>%
     filter(is.na(group_var) | group_var == "") %>%
     mutate(group_var_value = "Overall") %>%
     select(-group_var)
+#  i want to print the column analysis_type in data_overall.column(section=="Demographic")
+    print(data_overall)
 ```
 
 ```{r plots, echo=FALSE, results='asis'}
