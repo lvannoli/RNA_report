@@ -48,7 +48,9 @@ RNA_report/
 2. Place the logo images in the inputs/logos/ directory.
 3. Open the RNA_report.Rmd file in RStudio or your preferred R IDE.
 4. Knit the RMarkdown file to generate the HTML report:
-5. The generated report will be saved in the outputs/ directory as RNA_report.html.
+5. Open the RNA_overall_graphs.Rmd file in RStudio or your preferred R IDE.
+6. Knit the RMarkdown file to generate the HTML file with graphs:
+7. The generated reports will be saved in the outputs/ directory.
 
 ## Customization
 - You can customize the report template by editing the RNA_report.Rmd and RNA_Overall_Graph.Rmd files.
