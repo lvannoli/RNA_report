@@ -7,24 +7,6 @@ The RNA Report project is designed to generate comprehensive reports and visuali
 - The script `RNA_report.Rmd` generates tables for each survey question. These are divided into three levels of aggregation: overall (no aggregation), district level, and subdistrict level.
 - The script `RNA_overall_graphs.Rmd` generates graphs and saves them in an HTML file for each survey question at the overall aggregation level.
 
-
-## Project Structure
-RNA_report/ 
-    ├── inputs/ 
-    │ ├── data/ 
-    │ │ └── analysis_outputs_rna.xlsx 
-    │ └── logos/ 
-    │ ├── REACH_Logo.jpg 
-    │ └── ocha_extended.jpg 
-    ├── scripts/ 
-    │ └── functions.R
-    ├── RNA_report.Rmd
-    ├── RNA_report.html 
-    ├── RNA_Overall_Graph.Rmd 
-    ├── RNA_Overall_Graph.html 
-    ├── updated_style.css 
-    └── README.md
-
 # Requirements
 - R (version 4.0 or higher)
 - R packages:
