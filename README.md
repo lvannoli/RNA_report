@@ -53,5 +53,5 @@ RNA_report/
 7. The generated reports will be saved in the outputs/ directory.
 
 ## Customization
-- You can customize the report template by editing the RNA_report.Rmd and RNA_Overall_Graph.Rmd files.
+- You can customize the report template by editing the RNA_report.Rmd and RNA_overall_graphs.Rmd files.
 - Update the CSS styles in updated_style.css to change the appearance of the report.
